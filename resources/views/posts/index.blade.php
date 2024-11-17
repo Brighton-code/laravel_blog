@@ -53,7 +53,7 @@
                                 <form action="{{ route('posts.destroy', $post) }}" method="post">
                                     @method('DELETE')
                                     @csrf
-                                    <a href="" onclick="this.closest('form').submit(); return 0;" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
+                                    <a href="" onclick="event.preventDefault(); this.closest('form').submit();" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
                                 </form>
                             </div>
                         </td>
