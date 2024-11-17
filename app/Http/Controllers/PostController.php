@@ -39,22 +39,10 @@ class PostController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $doc = new DOMDocument();
-        $doc->loadHTML($request->get('body'));
-        $images = $doc->getElementsByTagName('img');
-        $scripts = $doc->getElementsByTagName('script');
-        for ($i = 0; $i < $images->length; $i++) {
-            $images->item($i)->parentNode->removeChild($images->item($i));
-        }
-        for ($i = 0; $i < $scripts->length; $i++) {
-            $scripts->item($i)->parentNode->removeChild($scripts->item($i));
-        }
-        $escaped_doc = $doc->saveHTML();
-
         Post::create([
             'user_id' => auth()->id(),
             'title' => htmlspecialchars($request->get('title')),
-            'body' => $escaped_doc,
+            'body' => $this->bodyParse($request),
             'img_url' => $this->imageParse($request),
         ]);
         return redirect()->route('posts.index')->with('success', 'Post created.');
@@ -75,7 +63,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         //
-        return view('posts.edit', compact('post'));
+        return view('posts.form', compact('post'));
     }
 
     /**
@@ -84,6 +72,23 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         //
+        $request->validate([
+            'title' => 'required|string|max:100|min:5',
+            'body' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $newImg = $this->imageParse($request);
+        if ($newImg === null) {
+            $newImg = $post->img_url;
+        }
+
+        $post->update([
+            'title' => htmlspecialchars($request->get('title')),
+            'body' => $this->bodyParse($request),
+            'img_url' => $newImg,
+        ]);
+        return redirect()->route('posts.index')->with('success', 'Post updated.');
     }
 
     /**
@@ -92,6 +97,8 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+        $post->delete();
+        return redirect()->route('posts.index')->with('success', 'Post deleted.');
     }
 
     /**
@@ -105,5 +112,25 @@ class PostController extends Controller
             return $imageName;
         }
         return null;
+    }
+
+    /**
+     * Precursor Save/Update Post
+     */
+    private function bodyParse(Request $request)
+    {
+        $doc = new DOMDocument();
+        $doc->loadHTML('<html>' . $request->get('body') . '</html>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $images = $doc->getElementsByTagName('img');
+        $scripts = $doc->getElementsByTagName('script');
+        for ($i = 0; $i < $images->length; $i++) {
+            $images->item($i)->parentNode->removeChild($images->item($i));
+        }
+        for ($i = 0; $i < $scripts->length; $i++) {
+            $scripts->item($i)->parentNode->removeChild($scripts->item($i));
+        }
+        $doc->encoding = 'UTF-8';
+        $escaped_doc = str_replace(array('<html>','</html>') , '' , $doc->saveHTML());
+        return $escaped_doc;
     }
 }

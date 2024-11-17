@@ -1,9 +1,18 @@
 <x-base-layout>
     <x-slot name="title">Posts</x-slot>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Show Posts
-        </h2>
+        <div class="flex">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight w-fit">
+                Show Posts
+            </h2>
+            @auth
+            <div class="space-x-8 -my-px ms-8 flex">
+                <x-nav-link :href="route('posts.create')" :active="request()->routeIs('posts.create')">
+                    Create
+                </x-nav-link>
+            </div>
+            @endauth
+        </div>
     </x-slot>
 
 
