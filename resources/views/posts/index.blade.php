@@ -49,7 +49,8 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex gap-2">
-                                <a href="{{ route('posts.edit', $post) }}" class="ms-auto font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                <a href="{{ route('posts.show', $post) }}" class="ms-auto font-medium text-blue-600 dark:text-blue-500 hover:underline">Show</a>
+                                <a href="{{ route('posts.edit', $post) }}" class=" font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                 <form action="{{ route('posts.destroy', $post) }}" method="post">
                                     @method('DELETE')
                                     @csrf
