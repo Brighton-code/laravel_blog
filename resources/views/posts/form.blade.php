@@ -10,6 +10,11 @@
                 <x-nav-link :href="route('posts.create')" :active="request()->routeIs('posts.create')">
                     Create
                 </x-nav-link>
+                @if($post->isOwner())
+                    <x-nav-link :href="route('posts.edit', $post)" :active="request()->routeIs('posts.edit', $post)">
+                        Edit
+                    </x-nav-link>
+                @endif
             </div>
             @endauth
         </div>
