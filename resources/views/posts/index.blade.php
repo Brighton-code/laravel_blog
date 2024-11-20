@@ -45,30 +45,43 @@
                             {{ $post->title }}
                         </td>
                         <td class="px-6 py-4">
-                            <a href="@if($post->img_url) /images/{{ $post->img_url }} @endif" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Image</a>
+                            <a href="@if($post->img_url) /images/{{ $post->img_url }} @endif"
+                               class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Image</a>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex gap-2">
-                                <a href="{{ route('posts.show', $post) }}" class="ms-auto font-medium text-blue-600 dark:text-blue-500 hover:underline">Show</a>
+                                <a href="{{ route('posts.show', $post) }}"
+                                   class="ms-auto font-medium text-blue-600 dark:text-blue-500 hover:underline">Show</a>
                                 @if($post->isOwner())
-                                <a href="{{ route('posts.edit', $post) }}" class=" font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                <form action="{{ route('posts.destroy', $post) }}" method="post">
-                                    @method('DELETE')
-                                    @csrf
-                                    <a href="" onclick="event.preventDefault(); this.closest('form').submit();" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
-                                </form>
+                                    <a href="{{ route('posts.edit', $post) }}"
+                                       class=" font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    <form action="{{ route('posts.destroy', $post) }}" method="post">
+                                        @method('DELETE')
+                                        @csrf
+                                        <a href="" onclick="event.preventDefault(); this.closest('form').submit();"
+                                           class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
+                                    </form>
                                 @endif
                             </div>
                         </td>
                     </tr>
                 @empty
-                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                        <th colspan="4" scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
+                        <th colspan="4" scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             No posts
                         </th>
                     </tr>
                 @endforelse
                 </tbody>
+                <tfoot class="w-full max-w-screen-xl px-4 mx-auto lg:px-12">
+                <!-- Start coding here -->
+                <tr class="relative overflow-hidden bg-white rounded-b-lg shadow-md dark:bg-gray-800 w-full">
+                    <td colspan="4" class="p-4 space-y-3">
+                        {!! $posts->links() !!}
+                    </td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>
